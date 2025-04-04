@@ -63,16 +63,17 @@ boardSelect.forEach((color, square) => {
 const fillBoard = () => {
   boardSelect.forEach((value, index) => {
     boardSelect[index].textContent = BColor[Math.floor(Math.random() * 5)];
-    document.getElementById("0").innerHTML = picEl;
+    // document.getElementById("0").innerHTML = picEl;
     //boardSelect[0].appendChild();
     //     var img2 = document.createElement("img2");
     // img2.src = "file:///C:/Users/jxyit/OneDrive/Desktop/yellowtile.jpg";
   });
 };
 
-let picEl = document.getElementById("myDiv").style.backgroundImage; //document.createElement("pic");
-picEl.src =
-  "https://www.shutterstock.com/shutterstock/photos/1187625811/display_1500/stock-vector-bright-abstract-mosaic-seamless-pattern-vector-background-for-design-and-decorate-backdrop-1187625811.jpg";
+// let picEl = (document.getElementById("myDiv").style.backgroundImage =
+//   bluetile.jpg); //document.createElement("pic");
+// picEl.src =
+//   "https://www.shutterstock.com/shutterstock/photos/1187625811/display_1500/stock-vector-bright-abstract-mosaic-seamless-pattern-vector-background-for-design-and-decorate-backdrop-1187625811.jpg";
 
 //switch blocks
 const swapB = () => {
@@ -1222,9 +1223,9 @@ const checkChain = () => {
 
 /// 1. check for each direction wasd XXX 2. check if move valid 3. check if moved results in winning combo
 const checkBricked = () => {
-  // if (B2 === "") {
-  //   return;
-  // }
+  if (B2 === "") {
+    return;
+  }
   boardSelect.forEach((value, tile) => {
     B1 = tile;
     // brickcheck = true;
@@ -1259,9 +1260,9 @@ const checkBricked = () => {
       totalMoves[totalMoves[index][0][0]][1].length > 1
     ) {
       if (
-        boardSelect[index].textContent ===
+        boardSelect[totalMoves[index][0][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][0][0]][1][0]].textContent &&
-        boardSelect[index].textContent ===
+        boardSelect[totalMoves[index][0][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][0][0]][1][1]].textContent
       ) {
         possibleMoves++;
@@ -1301,10 +1302,10 @@ const checkBricked = () => {
       totalMoves[totalMoves[index][1][0]][0].length > 1
     ) {
       if (
-        boardSelect[index].textContent ===
+        boardSelect[totalMoves[index][1][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][1][0]][0][0]].textContent &&
-        boardSelect[index].textContent ===
-          boardSelect[totalMoves[totalMoves[index][1][0]][0][0]].textContent
+        boardSelect[totalMoves[index][1][0]].textContent ===
+          boardSelect[totalMoves[totalMoves[index][1][0]][0][1]].textContent
       ) {
         possibleMoves++;
       }
@@ -1399,9 +1400,9 @@ const checkBricked = () => {
       totalMoves[totalMoves[index][2][0]][3].length > 1
     ) {
       if (
-        boardSelect[index].textContent ===
+        boardSelect[totalMoves[index][2][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][3][0]].textContent &&
-        boardSelect[index].textContent ===
+        boardSelect[totalMoves[index][2][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][3][1]].textContent
       ) {
         possibleMoves++;
@@ -1441,9 +1442,9 @@ const checkBricked = () => {
       totalMoves[totalMoves[index][3][0]][2].length > 1
     ) {
       if (
-        boardSelect[index].textContent ===
+        boardSelect[totalMoves[index][3][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][2][0]].textContent &&
-        boardSelect[index].textContent ===
+        boardSelect[totalMoves[index][3][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][2][1]].textContent
       ) {
         possibleMoves++;
@@ -1463,15 +1464,15 @@ const checkBricked = () => {
         possibleMoves++;
       }
     }
-    console.log(possibleMoves);
-    if (possibleMoves === 0) {
-      document.querySelector("#message").textContent = "Game over";
-    }
-    possibleMoves = 0;
-    totalMoves = [];
-    B1 = "";
-    B2 = "";
   });
+  console.log(possibleMoves);
+  if (possibleMoves === 0) {
+    document.querySelector("#message").textContent = "Game over";
+  }
+  totalMoves = [];
+  possibleMoves = 0;
+  B1 = "";
+  B2 = "";
 };
 
 const repeatInit = () => {
@@ -1492,10 +1493,6 @@ function createImage() {
   img.appendChild(newImg);
 }
 
-var img = document.createElement("img");
-img.src = "path_to_your_image.jpg";
-document.body.appendChild(img);
-
 // var img1 = document.createElement("img1"); //new Image();
 // img.src = "file:///C:/Users/jxyit/OneDrive/Desktop/redtile.jpg";
 // document.body.appendChild(img1);
@@ -1510,9 +1507,9 @@ document.body.appendChild(img);
 
 // const imgall = document.querySelectorAll("");
 
-const delay = (time) => {
-  return new Promise((fn) => setTimeout(fn, time));
-};
+// const delay = (time) => {
+//   return new Promise((fn) => setTimeout(fn, time));
+// };
 
 //tally cycle
 init();
