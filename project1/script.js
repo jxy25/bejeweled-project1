@@ -1,7 +1,6 @@
 let difficulty = 5;
 const board = [];
 const boardSize = "";
-//const BColor = ["q", "w", "e", "r", "t"];
 let tileColor = 0;
 let tileColor2 = 0;
 BColor = [1, 2, 3, 4, 5];
@@ -9,7 +8,6 @@ const randomColor = "";
 let B1 = "";
 let B2 = "";
 let B3 = "";
-let gap = false;
 let triColor = [];
 let refill = [];
 let validMoves = [[], [], [], []]; //bot top left right
@@ -42,22 +40,19 @@ const init = () => {
   document.querySelector("#message").textContent = "";
 };
 
-// testClick > swapB** > calcMoveDir > win3 > calcMoveDirB2 > win3B2 > filterValidMoves > clearState > gravity > refillB > checkChain > clearStart(15)
+// testClick > calcMoveDir > calcMoveDirB2 > CheckValidMovesB1 > swapB > win4 > gravity > refillB > checkChain > checkBricked > clearState
 const handleClick = (event) => {
   squareIndex = event.target.id * 1;
   testClick(squareIndex);
   calcMoveDir();
   calcMoveDirB2();
   checkValidMoveB1();
-
   swapB();
-
   win4();
   gravity(20);
   gravity(20);
   gravity(20);
   gravity(20);
-
   refillB();
   checkChain();
   checkBricked();
@@ -181,18 +176,6 @@ const calcMoveDir = () => {
       validMoves[3].push(adjRight2B1);
     } //0-4
   }
-  // console.log(
-  //   `B1 move dir: bot(` +
-  //     validMoves[0] +
-  //     `) top(` +
-  //     validMoves[1] +
-  //     `) left(` +
-  //     validMoves[2] +
-  //     `) right(` +
-  //     validMoves[3] +
-  //     `)`
-  // );
-  //win3();
 };
 
 const win4 = () => {
@@ -214,7 +197,6 @@ const win4 = () => {
       }
     });
   }
-
   triColor = [];
 };
 
@@ -1449,7 +1431,11 @@ const checkBricked = () => {
         boardSelect[totalMoves[index][0][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][0][0]][1][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + totalMoves[index][0][0],
+          totalMoves[totalMoves[index][0][0]][1][0],
+          totalMoves[totalMoves[index][0][0]][1][1]
+        );
         possibleMoves++;
       }
     }
@@ -1464,7 +1450,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][0][0]][2][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][0][0]][2][0],
+          totalMoves[totalMoves[index][0][0]][2][1]
+        );
         possibleMoves++;
       }
     }
@@ -1479,7 +1469,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][0][0]][3][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][0][0]][3][0],
+          totalMoves[totalMoves[index][0][0]][3][1]
+        );
         possibleMoves++;
       }
     }
@@ -1496,7 +1490,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][0][0]][3][0]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][0][0]][2][0],
+          totalMoves[totalMoves[index][0][0]][3][0]
+        );
         possibleMoves++;
       }
     }
@@ -1512,7 +1510,11 @@ const checkBricked = () => {
         boardSelect[totalMoves[index][1][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][1][0]][0][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + totalMoves[index][1][0],
+          totalMoves[totalMoves[index][1][0]][0][0],
+          totalMoves[totalMoves[index][1][0]][0][1]
+        );
         possibleMoves++;
       }
     }
@@ -1527,7 +1529,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][1][0]][1][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][1][0]][1][0],
+          totalMoves[totalMoves[index][1][0]][1][1]
+        );
         possibleMoves++;
       }
     }
@@ -1542,7 +1548,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][1][0]][2][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][1][0]][2][0],
+          totalMoves[totalMoves[index][1][0]][2][1]
+        );
         possibleMoves++;
       }
     }
@@ -1557,7 +1567,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][1][0]][3][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][1][0]][3][0],
+          totalMoves[totalMoves[index][1][0]][3][1]
+        );
         possibleMoves++;
       }
     }
@@ -1574,7 +1588,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][1][0]][3][0]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][1][0]][2][0],
+          totalMoves[totalMoves[index][1][0]][3][0]
+        );
         possibleMoves++;
       }
     }
@@ -1589,7 +1607,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][0][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][2][0]][0][0],
+          totalMoves[totalMoves[index][2][0]][0][1]
+        );
         possibleMoves++;
       }
     }
@@ -1604,7 +1626,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][1][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][2][0]][1][0],
+          totalMoves[totalMoves[index][2][0]][1][1]
+        );
         possibleMoves++;
       }
     }
@@ -1619,7 +1645,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][2][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][2][0]][2][0],
+          totalMoves[totalMoves[index][2][0]][2][1]
+        );
         possibleMoves++;
       }
     }
@@ -1634,7 +1664,11 @@ const checkBricked = () => {
         boardSelect[totalMoves[index][2][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][3][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + totalMoves[index][2][0],
+          totalMoves[totalMoves[index][2][0]][3][0],
+          totalMoves[totalMoves[index][2][0]][3][1]
+        );
         possibleMoves++;
       }
     }
@@ -1651,7 +1685,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][1][0]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][2][0]][0][0],
+          totalMoves[totalMoves[index][2][0]][1][0]
+        );
         possibleMoves++;
       }
     }
@@ -1666,7 +1704,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][0][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][3][0]][0][0],
+          totalMoves[totalMoves[index][3][0]][0][1]
+        );
         possibleMoves++;
       }
     }
@@ -1681,7 +1723,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][1][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][3][0]][1][0],
+          totalMoves[totalMoves[index][3][0]][1][1]
+        );
         possibleMoves++;
       }
     }
@@ -1696,7 +1742,11 @@ const checkBricked = () => {
         boardSelect[totalMoves[index][3][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][2][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + totalMoves[index][3][0],
+          totalMoves[totalMoves[index][3][0]][2][0],
+          totalMoves[totalMoves[index][3][0]][2][1]
+        );
         possibleMoves++;
       }
     }
@@ -1711,7 +1761,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][3][1]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][3][0]][3][0],
+          totalMoves[totalMoves[index][3][0]][3][1]
+        );
         possibleMoves++;
       }
     }
@@ -1727,7 +1781,11 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][1][0]].textContent
       ) {
-        console.log("possible " + index);
+        console.log(
+          "possible " + index,
+          totalMoves[totalMoves[index][3][0]][0][0],
+          totalMoves[totalMoves[index][3][0]][1][0]
+        );
         possibleMoves++;
       }
     }
