@@ -1,6 +1,10 @@
+let difficulty = 5;
 const board = [];
 const boardSize = "";
-const BColor = ["q", "w", "e", "r", "t"];
+//const BColor = ["q", "w", "e", "r", "t"];
+let tileColor = 0;
+let tileColor2 = 0;
+BColor = [1, 2, 3, 4, 5];
 const randomColor = "";
 let B1 = "";
 let B2 = "";
@@ -24,6 +28,9 @@ let tileDir = [];
 let totalDir = [];
 let possibleMoves = 0;
 let brickcheck = false;
+let swapped = false;
+let finished = false;
+let refreshed = false;
 
 const boardSelect = document.querySelectorAll(".sqr");
 
@@ -32,10 +39,10 @@ const init = () => {
   clearStart(0);
   refillB();
   repeatInit();
+  document.querySelector("#message").textContent = "";
 };
 
-// testClick > swapB** > calcMoveDir > win3 > calcMoveDirB2 > win3B2 > filterValidMoves > clearState > grav > gravity > refillB > checkChain > clearStart(15)
-// need to add looping checks on chains
+// testClick > swapB** > calcMoveDir > win3 > calcMoveDirB2 > win3B2 > filterValidMoves > clearState > gravity > refillB > checkChain > clearStart(15)
 const handleClick = (event) => {
   squareIndex = event.target.id * 1;
   testClick(squareIndex);
@@ -46,9 +53,11 @@ const handleClick = (event) => {
   swapB();
 
   win4();
+  gravity(20);
+  gravity(20);
+  gravity(20);
+  gravity(20);
 
-  //clearState();
-  grav(4);
   refillB();
   checkChain();
   checkBricked();
@@ -62,18 +71,18 @@ boardSelect.forEach((color, square) => {
 //fill board with random color blocks
 const fillBoard = () => {
   boardSelect.forEach((value, index) => {
-    boardSelect[index].textContent = BColor[Math.floor(Math.random() * 5)];
-    // document.getElementById("0").innerHTML = picEl;
-    //boardSelect[0].appendChild();
-    //     var img2 = document.createElement("img2");
-    // img2.src = "file:///C:/Users/jxyit/OneDrive/Desktop/yellowtile.jpg";
+    boardSelect[index].classList.remove(
+      "type1",
+      "type2",
+      "type3",
+      "type4",
+      "type5"
+    );
+    tileColor = BColor[Math.floor(Math.random() * 5)];
+    boardSelect[index].textContent = tileColor;
+    boardSelect[index].classList.add("type" + tileColor);
   });
 };
-
-// let picEl = (document.getElementById("myDiv").style.backgroundImage =
-//   bluetile.jpg); //document.createElement("pic");
-// picEl.src =
-//   "https://www.shutterstock.com/shutterstock/photos/1187625811/display_1500/stock-vector-bright-abstract-mosaic-seamless-pattern-vector-background-for-design-and-decorate-backdrop-1187625811.jpg";
 
 //switch blocks
 const swapB = () => {
@@ -82,7 +91,24 @@ const swapB = () => {
   }
   if (B1count > 0 || B2count > 0) {
     boardSelect[B1].textContent = boardSelect[B2].textContent;
-    boardSelect[B2].textContent = B3;
+    boardSelect[B2].textContent = boardSelect[B3].textContent;
+    boardSelect[B1].classList.remove(
+      "type1",
+      "type2",
+      "type3",
+      "type4",
+      "type5"
+    );
+    boardSelect[B2].classList.remove(
+      "type1",
+      "type2",
+      "type3",
+      "type4",
+      "type5"
+    );
+    boardSelect[B1].classList.add("type" + boardSelect[B1].textContent);
+    boardSelect[B2].classList.add("type" + boardSelect[B3].textContent);
+    swapped = true;
   }
 };
 
@@ -91,7 +117,7 @@ const testClick = (squareIndex) => {
     B1 = squareIndex * 1;
   } else {
     B2 = squareIndex * 1;
-    B3 = boardSelect[B1].textContent;
+    B3 = B1;
   }
   console.log(`B1: ${B1},  B2: ${B2}`);
 };
@@ -170,14 +196,22 @@ const calcMoveDir = () => {
 };
 
 const win4 = () => {
+  if (swapped === false) {
+    return;
+  }
   if (B1count === 0 && B2count === 0) {
     return;
   }
   console.log(`blocks to be destroyed: ${triColor}`);
   if (B1count > 0 || B2count > 0) {
     triColor.forEach((value, index) => {
-      console.log(`blocks to be destroyed: ${boardSelect[value].textContent}`);
-      boardSelect[value].textContent = "";
+      console.log(
+        `block: ` + value + ` value: ` + boardSelect[value].textContent
+      );
+      // console.log(`blocks to be destroyed: ${boardSelect[value].textContent}`);
+      if (boardSelect[value].textContent !== "") {
+        boardSelect[value].textContent = "";
+      }
     });
   }
 
@@ -257,30 +291,32 @@ const calcMoveDirB2 = () => {
 };
 
 const gravity = (n) => {
-  // if ((gap = false)) {
-  //   return;
-  // }
-  if (n > 0) {
-    if (boardSelect[n * 1 + 4].textContent === "") {
-      boardSelect[n * 1 + 4].textContent = boardSelect[n - 1].textContent;
-      boardSelect[n - 1].textContent = "";
-      replacedB.push(n * 1 + 4);
+  console.log("called");
+  if ((B1 !== "") & (B2 !== "")) {
+    if (n > 0) {
+      if (boardSelect[n + 4].textContent === "") {
+        boardSelect[n + 4].textContent = boardSelect[n - 1].textContent;
+        boardSelect[n + 4].classList.remove(
+          "type1",
+          "type2",
+          "type3",
+          "type4",
+          "type5"
+        );
+        boardSelect[n + 4].classList.add(
+          "type" + boardSelect[n - 1].textContent
+        );
+        boardSelect[n - 1].textContent = "";
+      }
+      gravity(n - 1);
     }
-    gravity(n - 1);
-    return;
   }
-};
-
-const grav = (n) => {
-  if (n > 0) {
-    gravity(20);
-  } else {
-    return;
-  }
-  grav(n - 1);
 };
 
 const clearState = () => {
+  if (finished === false) {
+    return;
+  }
   if (B1 !== "" && B2 !== "") {
     B1 = "";
     B2 = "";
@@ -296,19 +332,31 @@ const clearState = () => {
   B2count = 0;
   validMoves = [[], [], [], []];
   validMoves2 = [[], [], [], []];
+  swapped = false;
+  finished = false;
 };
 
 const refillB = () => {
   refilled2 = 0;
   boardSelect.forEach((value, num) => {
     if (boardSelect[num].textContent === "") {
-      boardSelect[num].textContent = BColor[Math.floor(Math.random() * 5)];
+      tileColor2 = BColor[Math.floor(Math.random() * 5)];
+      boardSelect[num].textContent = tileColor2;
+      boardSelect[num].classList.remove(
+        "type1",
+        "type2",
+        "type3",
+        "type4",
+        "type5"
+      );
+      boardSelect[num].classList.add("type" + tileColor2);
       refill.push(num);
       refilled2++;
     }
   });
   // console.log(`REFILL ROW ` + refill);
   // console.log(`no of times refilled ` + refilled2);
+  tileColor2 = 0;
   refill = [];
 };
 
@@ -332,6 +380,7 @@ const clearStart = (n) => {
       boardSelect[blxAxis[n]].textContent = "";
       boardSelect[blxAxis[n] - 5].textContent = "";
       boardSelect[blxAxis[n] - 10].textContent = "";
+      return;
     }
     //vertical
     if (
@@ -349,23 +398,150 @@ const clearStart = (n) => {
       boardSelect[blyAxis[n] + 1].textContent = "";
       boardSelect[blyAxis[n] + 2].textContent = "";
       initCheck = false;
+      return;
     }
   } else {
     return;
   }
-  //console.log("clear start");
+  console.log("clear start");
   clearStart(n + 1);
 };
 
-///////////
-/////////////
-///////////
+const clearChain5x = (o) => {
+  if (o < 5) {
+    bl5xAxis = [24, 23, 22, 21, 20];
+    bl5yAxis = [0, 5, 10, 15, 20];
+    if (
+      boardSelect[bl5xAxis[o]].textContent ===
+        boardSelect[bl5xAxis[o] - 5].textContent &&
+      boardSelect[bl5xAxis[o]].textContent ===
+        boardSelect[bl5xAxis[o] - 10].textContent &&
+      boardSelect[bl5xAxis[o]].textContent ===
+        boardSelect[bl5xAxis[o] - 15].textContent &&
+      boardSelect[bl5xAxis[o]].textContent ===
+        boardSelect[bl5xAxis[o] - 20].textContent
+    ) {
+      boardSelect[bl5xAxis[o]].textContent = "";
+      boardSelect[bl5xAxis[o] - 5].textContent = "";
+      boardSelect[bl5xAxis[o] - 10].textContent = "";
+      boardSelect[bl5xAxis[o] - 15].textContent = "";
+      boardSelect[bl5xAxis[o] - 20].textContent = "";
+    }
 
-const checkValidMoveB1 = () => {
-  if (B1 === B2) {
+    if (
+      boardSelect[bl5yAxis[o]].textContent ===
+        boardSelect[bl5yAxis[o] + 1].textContent &&
+      boardSelect[bl5yAxis[o]].textContent ===
+        boardSelect[bl5yAxis[o] + 2].textContent &&
+      boardSelect[bl5yAxis[o]].textContent ===
+        boardSelect[bl5yAxis[o] + 3].textContent &&
+      boardSelect[bl5yAxis[o]].textContent ===
+        boardSelect[bl5yAxis[o] + 4].textContent
+    ) {
+      boardSelect[bl5yAxis[o]].textContent = "";
+      boardSelect[bl5yAxis[o] + 1].textContent = "";
+      boardSelect[bl5yAxis[o] + 2].textContent = "";
+      boardSelect[bl5yAxis[o] + 3].textContent = "";
+      boardSelect[bl5yAxis[o] + 4].textContent = "";
+    }
+  } else {
     return;
   }
+  console.log("clearChain5x");
+  clearChain5x(o + 1);
+};
 
+const clearChain4x = (p) => {
+  if (p < 10) {
+    bl4xAxis = [24, 23, 22, 21, 20, 19, 18, 17, 16, 15];
+    bl4yAxis = [0, 5, 10, 15, 20, 1, 6, 11, 16, 21];
+    if (
+      boardSelect[bl4xAxis[p]].textContent ===
+        boardSelect[bl4xAxis[p] - 5].textContent &&
+      boardSelect[bl4xAxis[p]].textContent ===
+        boardSelect[bl4xAxis[p] - 10].textContent &&
+      boardSelect[bl4xAxis[p]].textContent ===
+        boardSelect[bl4xAxis[p] - 15].textContent
+    ) {
+      boardSelect[bl4xAxis[p]].textContent = "";
+      boardSelect[bl4xAxis[p] - 5].textContent = "";
+      boardSelect[bl4xAxis[p] - 10].textContent = "";
+      boardSelect[bl4xAxis[p] - 15].textContent = "";
+    }
+
+    if (
+      boardSelect[bl4yAxis[p]].textContent ===
+        boardSelect[bl4yAxis[p] + 1].textContent &&
+      boardSelect[bl4yAxis[p]].textContent ===
+        boardSelect[bl4yAxis[p] + 2].textContent &&
+      boardSelect[bl4yAxis[p]].textContent ===
+        boardSelect[bl4yAxis[p] + 3].textContent
+    ) {
+      boardSelect[bl4yAxis[p]].textContent = "";
+      boardSelect[bl4yAxis[p] + 1].textContent = "";
+      boardSelect[bl4yAxis[p] + 2].textContent = "";
+      boardSelect[bl4yAxis[p] + 3].textContent = "";
+    }
+  } else {
+    return;
+  }
+  console.log("clearChain4x");
+  clearChain4x(p + 1);
+};
+
+const clearChain3x = (n) => {
+  if (n < 15) {
+    blxAxis = [24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10];
+    blyAxis = [0, 1, 2, 5, 6, 7, 10, 11, 12, 15, 16, 17, 20, 21, 22];
+    //horizontal
+    if (
+      boardSelect[blxAxis[n]].textContent ===
+        boardSelect[blxAxis[n] - 5].textContent &&
+      boardSelect[blxAxis[n]].textContent ===
+        boardSelect[blxAxis[n] - 10].textContent
+    ) {
+      console.log(
+        `add blocks cleared: ${boardSelect[blxAxis[n]].textContent}, ${
+          boardSelect[blxAxis[n] - 5].textContent
+        }, ${boardSelect[blxAxis[n] - 10].textContent}, ${blxAxis[n]}`
+      );
+      boardSelect[blxAxis[n]].textContent = "";
+      boardSelect[blxAxis[n] - 5].textContent = "";
+      boardSelect[blxAxis[n] - 10].textContent = "";
+      return;
+    }
+    //vertical
+    if (
+      boardSelect[blyAxis[n]].textContent ===
+        boardSelect[blyAxis[n] + 1].textContent &&
+      boardSelect[blyAxis[n]].textContent ===
+        boardSelect[blyAxis[n] + 2].textContent
+    ) {
+      console.log(
+        `add blocks cleared: ${boardSelect[blyAxis[n]].textContent}, ${
+          boardSelect[blyAxis[n] + 1].textContent
+        }, ${boardSelect[blyAxis[n] + 2].textContent}, ${blyAxis[n]}`
+      );
+      boardSelect[blyAxis[n]].textContent = "";
+      boardSelect[blyAxis[n] + 1].textContent = "";
+      boardSelect[blyAxis[n] + 2].textContent = "";
+      initCheck = false;
+      return;
+    }
+  } else {
+    return;
+  }
+  console.log("clearChain3x");
+  clearChain3x(n + 1);
+};
+
+const checkValidMoveB1 = () => {
+  if (B1 == B2) {
+    return;
+  }
+  // if (valid === false) {
+  //   return;
+  // }
   //B1 moves down
   if (B2 === B1 + 5) {
     ///B1 new position
@@ -545,14 +721,14 @@ const checkValidMoveB1 = () => {
       if (
         boardSelect[B2].textContent === boardSelect[B1].textContent &&
         boardSelect[B2].textContent ===
-          boardSelect[validMoves2[1][0]].textContent
+          boardSelect[validMoves2[1][1]].textContent
       ) {
         console.log(
           boardSelect[B2].textContent,
           boardSelect[B1].textContent,
-          boardSelect[validMoves2[1][0]].textContent
+          boardSelect[validMoves2[1][1]].textContent
         );
-        triColor.push(B2, B1, validMoves2[1][0]);
+        triColor.push(B2, B1, validMoves2[1][1]);
         B2SwapTb2B = true;
         B2count++;
       }
@@ -1210,20 +1386,28 @@ const checkValidMoveB1 = () => {
 };
 
 const checkChain = () => {
-  // clearStart(0);
-  //console.log("checkedChain");
   while (refilled2 > 0) {
-    clearStart(0);
-    grav(4);
+    clearChain5x(0);
+    clearChain4x(0);
+    clearChain3x(0);
+    gravity(20);
+    gravity(20);
+    gravity(20);
+    gravity(20);
     refillB();
-    ////do another round of checks. while loop?
   }
-  //add scoring elements
+  if (refilled2 === 0) {
+    console.log("refreshed");
+    refreshed = true;
+  }
 };
 
 /// 1. check for each direction wasd XXX 2. check if move valid 3. check if moved results in winning combo
 const checkBricked = () => {
   if (B2 === "") {
+    return;
+  }
+  if (refreshed === false) {
     return;
   }
   boardSelect.forEach((value, tile) => {
@@ -1247,9 +1431,9 @@ const checkBricked = () => {
           boardSelect[totalMoves[totalMoves[index][0][0]][0][1]].textContent
       ) {
         console.log(
-          boardSelect[index].textContent,
-          boardSelect[totalMoves[totalMoves[index][0][0]][0][0]].textContent,
-          boardSelect[totalMoves[totalMoves[index][0][0]][0][1]].textContent
+          "possible " + index,
+          totalMoves[totalMoves[index][0][0]][0][0],
+          totalMoves[totalMoves[index][0][0]][0][1]
         );
         possibleMoves++;
       }
@@ -1265,6 +1449,7 @@ const checkBricked = () => {
         boardSelect[totalMoves[index][0][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][0][0]][1][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1279,6 +1464,7 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][0][0]][2][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1293,9 +1479,28 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][0][0]][3][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
+
+    //move down, check left right sides
+    if (
+      totalMoves[index][0].length > 0 &&
+      totalMoves[totalMoves[index][0][0]][2].length > 0 &&
+      totalMoves[totalMoves[index][0][0]][3].length > 0
+    ) {
+      if (
+        boardSelect[index].textContent ===
+          boardSelect[totalMoves[totalMoves[index][0][0]][2][0]].textContent &&
+        boardSelect[index].textContent ===
+          boardSelect[totalMoves[totalMoves[index][0][0]][3][0]].textContent
+      ) {
+        console.log("possible " + index);
+        possibleMoves++;
+      }
+    }
+
     //move up, check down
     if (
       totalMoves[index][1].length > 0 &&
@@ -1307,6 +1512,7 @@ const checkBricked = () => {
         boardSelect[totalMoves[index][1][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][1][0]][0][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1321,6 +1527,7 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][1][0]][1][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1335,6 +1542,7 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][1][0]][2][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1349,6 +1557,24 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][1][0]][3][1]].textContent
       ) {
+        console.log("possible " + index);
+        possibleMoves++;
+      }
+    }
+
+    //move up, check left right sides
+    if (
+      totalMoves[index][1].length > 0 &&
+      totalMoves[totalMoves[index][1][0]][2].length > 0 &&
+      totalMoves[totalMoves[index][1][0]][3].length > 0
+    ) {
+      if (
+        boardSelect[index].textContent ===
+          boardSelect[totalMoves[totalMoves[index][1][0]][2][0]].textContent &&
+        boardSelect[index].textContent ===
+          boardSelect[totalMoves[totalMoves[index][1][0]][3][0]].textContent
+      ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1363,6 +1589,7 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][0][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1377,6 +1604,7 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][1][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1391,6 +1619,7 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][2][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1405,6 +1634,24 @@ const checkBricked = () => {
         boardSelect[totalMoves[index][2][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][2][0]][3][1]].textContent
       ) {
+        console.log("possible " + index);
+        possibleMoves++;
+      }
+    }
+
+    //move left, check top bot sides
+    if (
+      totalMoves[index][2].length > 0 &&
+      totalMoves[totalMoves[index][2][0]][0].length > 0 &&
+      totalMoves[totalMoves[index][2][0]][1].length > 0
+    ) {
+      if (
+        boardSelect[index].textContent ===
+          boardSelect[totalMoves[totalMoves[index][2][0]][0][0]].textContent &&
+        boardSelect[index].textContent ===
+          boardSelect[totalMoves[totalMoves[index][2][0]][1][0]].textContent
+      ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1419,6 +1666,7 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][0][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1433,6 +1681,7 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][1][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1447,6 +1696,7 @@ const checkBricked = () => {
         boardSelect[totalMoves[index][3][0]].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][2][1]].textContent
       ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1461,6 +1711,23 @@ const checkBricked = () => {
         boardSelect[index].textContent ===
           boardSelect[totalMoves[totalMoves[index][3][0]][3][1]].textContent
       ) {
+        console.log("possible " + index);
+        possibleMoves++;
+      }
+    }
+    //move right, check top bot sides
+    if (
+      totalMoves[index][3].length > 0 &&
+      totalMoves[totalMoves[index][3][0]][0].length > 0 &&
+      totalMoves[totalMoves[index][3][0]][1].length > 0
+    ) {
+      if (
+        boardSelect[index].textContent ===
+          boardSelect[totalMoves[totalMoves[index][3][0]][0][0]].textContent &&
+        boardSelect[index].textContent ===
+          boardSelect[totalMoves[totalMoves[index][3][0]][1][0]].textContent
+      ) {
+        console.log("possible " + index);
         possibleMoves++;
       }
     }
@@ -1473,6 +1740,7 @@ const checkBricked = () => {
   possibleMoves = 0;
   B1 = "";
   B2 = "";
+  finished = true;
 };
 
 const repeatInit = () => {
@@ -1485,31 +1753,6 @@ const repeatInit = () => {
   console.log(`no of refill loops ${cycle}`);
   cycle = 0;
 };
-
-function createImage() {
-  let img = document.getElementById("img");
-  let newImg = document.createElement("img");
-  newImg.src = "/static/images/logo.png";
-  img.appendChild(newImg);
-}
-
-// var img1 = document.createElement("img1"); //new Image();
-// img.src = "file:///C:/Users/jxyit/OneDrive/Desktop/redtile.jpg";
-// document.body.appendChild(img1);
-// var img2 = document.createElement("img2");
-// img2.src = "file:///C:/Users/jxyit/OneDrive/Desktop/yellowtile.jpg";
-// var img3 = document.createElement("img3");
-// img3.src = "file:///C:/Users/jxyit/OneDrive/Desktop/greentile.jpg";
-// var img4 = document.createElement("img4");
-// img4.src = "file:///C:/Users/jxyit/OneDrive/Desktop/bluetile.jpg";
-// var img5 = document.createElement("img5");
-// img5.src = "file:///C:/Users/jxyit/OneDrive/Desktop/greytile.jpg";
-
-// const imgall = document.querySelectorAll("");
-
-// const delay = (time) => {
-//   return new Promise((fn) => setTimeout(fn, time));
-// };
 
 //tally cycle
 init();

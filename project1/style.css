@@ -1,8 +1,7 @@
 body {
-  background-color: gainsboro;
-  /* Use a system font, if none are available use an available sans-sarif */
   font-family: system-ui, sans-serif;
   margin: 0;
+  background-color: lightblue;
 }
 
 .board {
@@ -10,6 +9,9 @@ body {
   flex-wrap: wrap;
   width: 300px;
   justify-content: center;
+  align-items: center;
+  background-color: lightblue;
+  /* color: transparent; */
 }
 
 .sqr {
@@ -23,4 +25,20 @@ body {
   align-items: center;
   justify-content: space-around;
   /* //background-color: green; */
+}
+
+.type1 {
+  background: red;
+}
+.type2 {
+  background: green;
+}
+.type3 {
+  background: yellow;
+}
+.type4 {
+  background: blue;
+}
+.type5 {
+  background: orange;
 }
