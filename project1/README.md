@@ -1,6 +1,6 @@
 # Bejeweled
 
-Add logo
+![Bejeweled game with tiles generated](https://github.com/jxy25/bejeweled-project1/blob/main/project1/Bejeweled%20pic.png)
 
 ## Introduction
 
